@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+       <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+$.getJSON('/get/geodata', function(data) {
+    points = Array();
+    console.log(data.length)
+    for (var i = 0; i < data.length; i++) {
+        console.log(JSON.parse(data[i]))
+        points.push(JSON.parse(data[i])["data"]);
+    }
+    // for (var i =0; i < 100; i++) {
+    //     points.push([[180-Math.random()*360,90-Math.random()*180],[180-Math.random()*360,90-Math.random()*180]]);
+    // }
+    console.log(points);
+    // points = data['data']
+    // points = [
+    // [[120.44, 30.65],[-80.9, 35.2]]
+    // ]
+    // console.log(points);
+
+    myChart.setOption({
+        backgroundColor: '#000',
+        title: {
+            text: '3cloud网络攻击态势感知地球',
+                left: 'left',
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        globe: {
+          environment: 'static/img/starfield.jpg',
+          baseTexture: 'static/img/world.topo.bathy.200407.jpg',
+          heightTexture: 'static/img/bathymetry_bw_composite_4k.jpg',
+
+          displacementScale: 0.1,
+          displacementQuality: 'ultra',
+          realisticMaterial: {
+              roughness: 0.2,
+              metalness: 0
+          },
+
+          shading: 'realistic',
+          postEffect: {
+              enable: true,
+              depthOfField: {
+                  enable: false,
+                  focalDistance: 150
+              }
+          },
+          temporalSuperSampling: {
+              enable: true
+          },
+
+          light: {
+              ambient: {
+                  intensity: 0.4
+              },
+              main: {
+                  intensity: 0.4
+              },
+              ambientCubemap: {
+                  texture: 'static/lake.hdr',
+                  exposure: 1,
+                  diffuseIntensity: 1,
+                  specularIntensity: 2
+              }
+          },
+          silent: true,
+          viewControl: {
+              autoRotate: true
+          }
+        },
+        series: {
+
+            type: 'lines3D',
+            name: 'attack',
+            effect: {
+                show: true,
+                trailWidth: 2,
+                trailLength: 0.15,
+                trailOpacity: 1,
+                trailColor: 'rgb(82, 50, 150)'
+            },
+
+            lineStyle: {
+                width: 1,
+                color: 'rgb(82, 50, 150)',
+                // color: 'rgb(118, 233, 241)',
+                opacity: 0.1
+            },
+            blendMode: 'lighter',
+            data: points
+        }
+    });
+});;
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+
+       </script>
+   </body>
+</html>

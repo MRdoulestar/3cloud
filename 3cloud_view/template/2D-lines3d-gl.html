@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+       <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+var uploadedDataURL = "/get/geodata";
+
+
+myChart.showLoading();
+
+$.getJSON(uploadedDataURL, function(data) {
+
+    myChart.hideLoading();
+
+    points = Array();
+    console.log(data.length)
+    for (var i = 0; i < data.length; i++) {
+        console.log(JSON.parse(data[i]))
+        points.push(JSON.parse(data[i])["data"]);
+    }
+    // for (var i =0; i < 1000; i++) {
+    //     points.push([[180-Math.random()*360,90-Math.random()*180],[180-Math.random()*360,90-Math.random()*180]]);
+    // }
+    // test = [
+    // [[120.44, 30.65, 1],[-80.9, 35.2, 1]],[[120.44, 30.65, 1],[-80.9, 35.2, 1]],[[120.44, 30.65, 1],[-80.9, 35.2, 1]],[[120.44, 30.65, 1],[-80.9, 35.2, 1]],[[120.44, 30.65, 1],[-80.9, 35.2, 1]]
+    // ]
+
+    myChart.setOption({
+        title: {
+            text: '3cloud网络攻击态势感知图',
+                left: 'center',
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        geo3D: {
+            map: 'world',
+            shading: 'realistic',
+            silent: false,
+            environment: '#000',
+            realisticMaterial: {
+                roughness: 0.8,
+                metalness: 0
+            },
+            postEffect: {
+                enable: true
+            },
+            groundPlane: {
+                show: false
+            },
+            light: {
+                main: {
+                    intensity: 1,
+                    alpha: 30
+                },
+                ambient: {
+                    intensity: 0
+                }
+            },
+            viewControl: {
+                distance: 70,
+                alpha: 89,
+
+                panMouseButton: 'left',
+                rotateMouseButton: 'right'
+            },
+
+            itemStyle: {
+                areaColor: '#000'
+            },
+
+            regionHeight: 0.5
+        },
+        series: [{
+            name: 'attack',
+            type: 'lines3D',
+            coordinateSystem: 'geo3D',
+
+            effect: {
+                show: true,
+                trailWidth: 2,
+                trailOpacity: 0.6,
+                trailLength: 0.4,
+                constantSpeed: 20
+            },
+
+            blendMode: 'lighter',
+
+            lineStyle: {
+                width: 0.2,
+                opacity: 0.08
+            },
+
+            data: points
+
+        }]
+    });
+
+    // window.addEventListener('keydown', function () {
+    //     myChart.dispatchAction({
+    //         type: 'lines3DToggleEffect',
+    //         seriesIndex: 0
+    //     });
+    // });
+});;
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+       </script>
+   </body>
+</html>
