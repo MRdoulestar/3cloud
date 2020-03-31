@@ -108,7 +108,8 @@ def http_ai_waf():
     global localip
     global device
     if localip == "":
-        localip = get_local_ip(device)
+        #localip = get_local_ip(device)
+        localip = "127.0.0.1"
 
     uri = request.args.get('uri')
     remoteip = request.args.get('remoteip')
